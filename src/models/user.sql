@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS public.users
     token text NOT NULL,
     settings jsonb NOT NULL,
     is_verified boolean NOT NULL default false,
-    CONSTRAINT users_pkey PRIMARY KEY (id)
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT users_email_ukey UNIQUE (email)
 );
 
 INSERT INTO users (created_at, updated_at, email, token, is_verified) VALUES (now(), now(), 'varga.vlad@gmail.com', 'some_token', '{"cities": { "brussels": true, "bratislava": true }}', true);
