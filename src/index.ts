@@ -102,7 +102,7 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         }
 
         // send email to user
-        Mailer.notifyUser(userToNotify, relevantJobs, citiesMentioned)
+        await Mailer.notifyUser(userToNotify, relevantJobs, citiesMentioned)
     }
     
     return happyEnding('Success')
