@@ -5,12 +5,17 @@ export interface Job {
     id: number,
     created_at: Date,
     title: string,
-    grade: string,
     href: string,
-    city: string
+    domain: string,
+    grade: string,
+    institution: string,
+    location: string,
+    deadline: string,
+    position_type: string
 }
 
 export class Job extends Model {
+    city_code: any;
     /**
      * Queries saved jobs since certain timestamp
      * 
@@ -32,7 +37,7 @@ export class Job extends Model {
         return Job.findAll({
             where: whereClause,
             order: [
-                ['city', 'ASC'],
+                ['location', 'ASC'],
             ]
         })
     }
@@ -56,22 +61,41 @@ Job.init({
         allowNull: false
         // allowNull defaults to true
     },
-    grade: {
-        comment: 'Job grade as it was mentioned on the EPSO website',
-        type: DataTypes.STRING,
-        allowNull: false
-        // allowNull defaults to true
-    },
     href: {
         type: DataTypes.STRING,
         allowNull: false
         // allowNull defaults to true
     },
-    city: {
-        comment: 'City code taken from the cities enum',
+    domain: {
+        comment: 'Job domain(s)',
         type: DataTypes.STRING,
         allowNull: false
         // allowNull defaults to true
+    },
+    grade: {
+        comment: 'Job grade(s): AST 4, AD 6, FG IV, ...',
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    institution: {
+        comment: 'Institution/EU body',
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    location: {
+        comment: 'Location string with country in brackets: Brussels (Belgium), Valletta (Malta), ...',
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    deadline: {
+        comment: 'Deadline string in format dd/mm/yyy - HH:mm',
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    position_type: {
+        comment: 'Position type: permanent_staff, temp, cast, seconded, ...',
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     // Other model options go here

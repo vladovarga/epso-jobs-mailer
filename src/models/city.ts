@@ -8,6 +8,7 @@ export interface City {
     code: string
     name: string
     country: string
+    display_name: string
 }
 
 export class City extends Model {
@@ -64,11 +65,15 @@ City.init({
         comment: 'City name as it was mentioned on the EPSO website',
         type: DataTypes.STRING,
         allowNull: false
-        // allowNull defaults to true
     },
     country: {
         comment: 'City country as it was mentioned on the EPSO website',
         type: DataTypes.STRING
+    },
+    display_name: {
+        comment: 'City name as it was mentioned on the EPSO website',
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     // Other model options go here

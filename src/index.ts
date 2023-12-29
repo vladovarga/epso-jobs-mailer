@@ -58,9 +58,6 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         where: {
             is_verified: true
         }
-    //     order: [
-    //         ['city', 'ASC'],
-    //     ]
     })
     
     // console.log("usersToNotify", usersToNotify)
@@ -72,15 +69,20 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
     }
 
     // get cities (their names, IDs, country, ...) that are mentioned in the jobs
-    const citiesMentioned = await City.findAll({
+    const citiesMentionedInJobs = await City.findAll({
         where: {
-            code: {
-                [Op.in]: Array.from(new Set(jobsSince.map( (job:Job) => { return job.city })))
+            display_name: {
+                [Op.in]: Array.from(new Set(jobsSince.map( (job:Job) => { return job.location })))
             }
         }
     })
 
-    // console.log("citiesMentioned", citiesMentioned)
+    if (citiesMentionedInJobs.length == 0 || citiesMentionedInJobs == null || citiesMentionedInJobs == undefined) {
+        // something went wrong, there are no cities mentioned in the jobs
+        return returnStatusCodeResponse(500, "There were no cities mentioned in the jobs")
+    }
+
+    // console.log("citiesMentionedInJobs", citiesMentionedInJobs)
 
     // iterate through users
     for (let i = 0; i < usersToNotify.length; i++) {
@@ -90,8 +92,20 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
 
         // filter out only relevant jobs for the current user      
         const relevantJobs = jobsSince.filter( (job:Job) => {
+            // job.location
+            // translate job location into city code
+            const cityByLocation = citiesMentionedInJobs.find( (city:City) => {
+                return city.display_name == job.location
+            })
+
+            if (cityByLocation == null || cityByLocation == undefined) {
+                // something went wrong, there is no city with such display name
+                console.error("There is no city with display name", job.location)
+                return false
+            }
+
             // user's settings has to contain wanted cities
-            return userToNotify.settings.cities.hasOwnProperty(job.city)
+            return userToNotify.settings.cities.hasOwnProperty(cityByLocation.code)
         })
 
         // console.log("relevantJobs", relevantJobs)
@@ -102,24 +116,34 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         }
 
         // send email to user
-        await Mailer.notifyUser(userToNotify, relevantJobs, citiesMentioned)
+        await Mailer.notifyUser(userToNotify, relevantJobs, citiesMentionedInJobs)
     }
     
     return happyEnding('Success')
 }
 
 function happyEnding(message: string, info?: Object) {
-    console.info("Happy ending", message, )
+    // console.info("Happy ending", message)
 
     // everything went OK, save is as the last run
     MailerRun.saveRun(true, {"message": message, "info": info})
 
     console.timeEnd("overall-execution-time")
 
+    return returnStatusCodeResponse(200, message)
+}
+
+function returnStatusCodeResponse(statusCode: number, message: string): any {
     return {
-        statusCode: 200,
+        statusCode: statusCode,
         body: JSON.stringify({
             message: message,
-        }),
+        })
     }
-}
+};
+
+// uncomment to run locally as script
+// (async function () {
+//     // run the handler
+//     await handler()
+// }) ()

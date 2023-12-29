@@ -14,25 +14,6 @@ export interface User {
 }
 
 export class User extends Model {
-    /**
-     * Queries saved jobs since certain timestamp
-     * 
-     * @param {Date} since
-     * 
-     * @returns
-     */
-    // public static async getJobsSince(since: any) {
-    //     return Job.findAll({
-    //         where: {
-    //             created_at: {
-    //                 [Op.gt]: since
-    //             }
-    //         },
-    //         order: [
-    //             ['city', 'ASC'],
-    //         ]
-    //     })
-    // }
 }
 
 User.init({
