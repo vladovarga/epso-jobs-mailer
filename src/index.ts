@@ -82,6 +82,32 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         return returnStatusCodeResponse(500, "There were no cities mentioned in the jobs")
     }
 
+    // some jobs have multiple locations concatenated by comma => need to split them and create a single record for each location
+    jobsSince.forEach( (job:Job, index) => {
+        if (!job.location.includes(",")) {
+            // there is only a single location
+            return
+        }
+
+        console.info("Job", job.title, "has multiple locations", job.location, "splitting")
+
+        let location_split = job.location.split(",")
+
+        for (let i = 0; i < location_split.length; i++) {
+            location_split[i] = location_split[i].trim()
+            
+            let modifiedJob = job
+
+            // modifty the location
+            modifiedJob.location = location_split[i]
+
+            jobsSince.push(modifiedJob)
+        }
+
+        // remove the original job with multiple locations
+        delete jobsSince[index]
+    })
+
     // console.log("citiesMentionedInJobs", citiesMentionedInJobs)
 
     // iterate through users
@@ -123,7 +149,7 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
 }
 
 function happyEnding(message: string, info?: Object) {
-    // console.info("Happy ending", message)
+    console.info("Happy ending", message)
 
     // everything went OK, save is as the last run
     MailerRun.saveRun(true, {"message": message, "info": info})
