@@ -68,20 +68,6 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         return happyEnding(message)
     }
 
-    // get cities (their names, IDs, country, ...) that are mentioned in the jobs
-    const citiesMentionedInJobs = await City.findAll({
-        where: {
-            display_name: {
-                [Op.in]: Array.from(new Set(jobsSince.map( (job:Job) => { return job.location })))
-            }
-        }
-    })
-
-    if (citiesMentionedInJobs.length == 0 || citiesMentionedInJobs == null || citiesMentionedInJobs == undefined) {
-        // something went wrong, there are no cities mentioned in the jobs
-        return returnStatusCodeResponse(500, "There were no cities mentioned in the jobs")
-    }
-
     // some jobs have multiple locations concatenated by comma => need to split them and create a single record for each location
     jobsSince.forEach( (job:Job, index) => {
         if (!job.location.includes(",")) {
@@ -107,6 +93,20 @@ export const handler = async (event?: APIGatewayEvent, context?: Context): Promi
         // remove the original job with multiple locations
         delete jobsSince[index]
     })
+
+    // get cities (their names, IDs, country, ...) that are mentioned in the jobs
+    const citiesMentionedInJobs = await City.findAll({
+        where: {
+            display_name: {
+                [Op.in]: Array.from(new Set(jobsSince.map( (job:Job) => { return job.location })))
+            }
+        }
+    })
+
+    if (citiesMentionedInJobs.length == 0 || citiesMentionedInJobs == null || citiesMentionedInJobs == undefined) {
+        // something went wrong, there are no cities mentioned in the jobs
+        return returnStatusCodeResponse(500, "There were no cities mentioned in the jobs")
+    }
 
     // console.log("citiesMentionedInJobs", citiesMentionedInJobs)
 
