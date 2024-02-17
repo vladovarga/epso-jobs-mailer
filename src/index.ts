@@ -160,7 +160,8 @@ function happyEnding(message: string, info?: Object) {
 }
 
 function returnStatusCodeResponse(statusCode: number, message: string): any {
-    sequelizeInstance.close()
+    // connection is not being close to save execution time - otherwise there would need to be "await" everywhere
+    // sequelizeInstance.close()
 
     return {
         statusCode: statusCode,
