@@ -36,6 +36,10 @@ export class Job extends Model {
 
         return Job.findAll({
             where: whereClause,
+            // for debug purposes
+            // where: {
+            //     id: 144
+            // },
             order: [
                 ['location', 'ASC'],
             ]

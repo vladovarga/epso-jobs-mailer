@@ -1,6 +1,6 @@
 {
   "name": "epso-jobs-mailer",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "EPSO Jobs mailer - Notifying relevant people about new opening on the EPSO jobs website",
   "main": "dist/index.js",
   "scripts": {
@@ -30,15 +30,15 @@
   },
   "homepage": "https://github.com/vladovarga/epso-jobs-mailer#readme",
   "devDependencies": {
-    "@aws-sdk/client-sesv2": "^3.379.1",
-    "@types/aws-lambda": "^8.10.119",
-    "dotenv": "^16.3.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "@aws-sdk/client-sesv2": "^3.515.0",
+    "@types/aws-lambda": "^8.10.133",
+    "dotenv": "^16.4.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "pg": "^8.11.1",
+    "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.37.0"
   }
 }
