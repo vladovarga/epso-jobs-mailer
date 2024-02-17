@@ -160,6 +160,8 @@ function happyEnding(message: string, info?: Object) {
 }
 
 function returnStatusCodeResponse(statusCode: number, message: string): any {
+    sequelizeInstance.close()
+
     return {
         statusCode: statusCode,
         body: JSON.stringify({
