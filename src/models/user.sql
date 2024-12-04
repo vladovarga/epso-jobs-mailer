@@ -15,5 +15,6 @@ CREATE TABLE IF NOT EXISTS public.users
     CONSTRAINT users_email_ukey UNIQUE (email)
 );
 
-INSERT INTO users (created_at, updated_at, email, token, is_verified) VALUES 
-    (now(), now(), 'example.user@somedomain.com', 'some_token', '{"cities": { "brussels": true, "bratislava": true }}', true);
+-- example of adding an user
+-- INSERT INTO users (created_at, updated_at, email, token, settings, is_verified) VALUES 
+--     (now(), now(), 'example.user@somedomain.com', 'some_token', '{"cities": { "brussels": true, "bratislava": true }}', true);

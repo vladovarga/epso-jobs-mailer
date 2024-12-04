@@ -19,9 +19,14 @@ let env = {
     BASE_URL_OBJECT: new URL(process.env.BASE_URL),
     
     PG_HOST: process.env.PG_HOST,
+    PG_PORT: 5432,
     PG_DATABASE: process.env.PG_DATABASE,
     PG_USERNAME: process.env.PG_USERNAME,
     PG_PASSWORD: process.env.PG_PASSWORD
+}
+
+if (process.env.PG_PORT) {
+    env["PG_PORT"] = parseInt(process.env.PG_PORT)
 }
 
 // console.log(env);
